@@ -21,8 +21,10 @@
    ============================================================ */
 
 const CONFIG = {
-  // ← Your Gemini API key
-  GEMINI_API_KEY : 'AQ.Ab8RN6JAKJVB45Q4o_7giUYlYvTJBXel4p-vKfH9pHRLmUBFzA',
+  // ← Your Gemini API key (loaded dynamically from localStorage)
+  get GEMINI_API_KEY() {
+    return localStorage.getItem('studyai_api_key') || '';
+  },
 
   // Gemini REST endpoint (no SDK needed — plain fetch)
   GEMINI_ENDPOINT : 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
@@ -79,6 +81,32 @@ $(document).ready(function () {
     $(this).closest('.input-card').removeClass('focused');
   });
 
+  /** API Key Modal event hooks */
+  $('#apiKeyModal').on('show.bs.modal', function () {
+    $('#apiKeyInput').val(CONFIG.GEMINI_API_KEY);
+    $('#apiKeyModalAlert').addClass('d-none').text('');
+  });
+
+  /** Save API Key button click */
+  $('#saveApiKeyBtn').on('click', function () {
+    const key = $('#apiKeyInput').val().trim();
+    if (!key) {
+      $('#apiKeyModalAlert').removeClass('d-none').text('Please enter a valid API key.');
+      return;
+    }
+    localStorage.setItem('studyai_api_key', key);
+    
+    const modalEl = document.getElementById('apiKeyModal');
+    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+    modal.hide();
+
+    // Re-trigger generate if there is input
+    const topic = $('#topicInput').val().trim();
+    if (topic && !appState.isLoading) {
+      handleGenerate();
+    }
+  });
+
 });
 
 
@@ -133,6 +161,12 @@ async function handleGenerate () {
   if (!topic) {
     showAlert('Please enter a topic before generating.', 'warning');
     $('#topicInput').trigger('focus');
+    return;
+  }
+
+  // Check if API key is configured
+  if (!CONFIG.GEMINI_API_KEY) {
+    showApiKeyModal(true);
     return;
   }
 
@@ -612,4 +646,19 @@ function refreshHistoryActiveState () {
       $(this).removeClass('active');
     }
   });
+}
+
+/**
+ * showApiKeyModal — open the API key configuration modal programmatically.
+ * @param {boolean} showWarning  If true, displays a message to prompt key entry.
+ */
+function showApiKeyModal (showWarning = false) {
+  if (showWarning) {
+    $('#apiKeyModalAlert').removeClass('d-none').text('Please enter your Gemini API key to proceed.');
+  } else {
+    $('#apiKeyModalAlert').addClass('d-none').text('');
+  }
+  const modalEl = document.getElementById('apiKeyModal');
+  const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+  modal.show();
 }

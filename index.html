@@ -37,6 +37,11 @@
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav ms-auto align-items-center gap-2">
           <li class="nav-item">
+            <a class="nav-link" href="#" id="apiKeyBtn" data-bs-toggle="modal" data-bs-target="#apiKeyModal">
+              <i class="bi bi-key-fill me-1"></i>API Key
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#" id="aboutBtn" data-bs-toggle="modal" data-bs-target="#aboutModal">
               <i class="bi bi-info-circle me-1"></i>About
             </a>
@@ -275,6 +280,38 @@
     </div>
   </div>
   <!-- END ABOUT MODAL -->
+
+
+  <!-- ===================== API KEY MODAL ===================== -->
+  <div class="modal fade" id="apiKeyModal" tabindex="-1" aria-labelledby="apiKeyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-custom">
+        <div class="modal-header">
+          <h5 class="modal-title" id="apiKeyModalLabel">
+            <i class="bi bi-key-fill me-2"></i>Configure Gemini API Key
+          </h5>
+          <button type="button" class="btn-close btn-close-custom" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>To use the AI Study Assistant, you need a Google Gemini API Key.</p>
+          <ol class="ps-3 mb-3">
+            <li>Go to <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a> to get a free key.</li>
+            <li>Paste your key below. It will be saved securely in your browser's local storage.</li>
+          </ol>
+          <div class="mb-3">
+            <label for="apiKeyInput" class="form-label" style="font-weight: 600; color: var(--text-primary);">Gemini API Key</label>
+            <input type="password" class="form-control topic-input" id="apiKeyInput" placeholder="AIzaSy..." style="background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.95rem; padding: 11px 16px; width: 100%;" />
+          </div>
+          <div id="apiKeyModalAlert" class="alert alert-danger d-none py-2" role="alert"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-modal-close" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-generate" id="saveApiKeyBtn">Save Key</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END API KEY MODAL -->
 
 
   <!-- Bootstrap 5 JS Bundle -->
